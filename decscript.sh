@@ -101,36 +101,46 @@ function decfunction(){
 
 	#############################################################################################################	
 	#Version 1.1
-	#Checking whether the two most frequent letters are in the correct position (A and E), using the word "que"
-	#"que" is the most frequent word by far with just 3 letters in PtBr
+	#CHE is the most frequent word with 3 letters in Italian. 
+	#Let's use it to confirm that the most frequent letters are in the correct position
 	
-	wordslist=$(cat $decfilepath | grep -o '\b[a-z]\{3\}\b' | sort | uniq -c | sort -nr)
-	worde=$(echo $wordslist | grep -Eo '\b\w+e\b' | head -n 1)
-	worda=$(echo $wordslist | grep -Eo '\b\w+a\b' | head -n 1)
-	
-	#Searching for the letter 'q'
-	cutworde=$(echo $worde | cut -c 1)
-	cutworda=$(echo $worda | cut -c 1)
-	
-	countcutworda=$(cat $decfilepath | grep -Eo "\b\w+${cutworda}\b" | wc -l)
-	countcutworde=$(cat $decfilepath | grep -Eo "\b\w+${cutworde}\b" | wc -l)
-	
-	if [ $countcutworda -gt $countcutworde ]
-	then
-		wordque=$worde
-	else
-		wordque=$worda
-	fi
+	wordche=$(cat $decfilepath | grep -o '\b[a-z]\{3\}\b' | sort | uniq -c | sort -nr | head -n 1 | awk -F ' ' '{print $2}')
+	wordche1=$(echo $wordche | cut -c 1)
+	wordche2=$(echo $wordche | cut -c 2)
+	wordche3=$(echo $wordche | cut -c 3)
 
-	#Letter replacement time based on the word "que"
-	wordque1=$(echo $wordque | cut -c 1)
-	wordque2=$(echo $wordque | cut -c 2)
-	wordque3=$(echo $wordque | cut -c 3)
+	if [ "$wordche1" != "c" ]; then
+		letterrep "c" "$wordche1"
+	fi
+	if [ "$wordche2" != "h" ]; then
+                letterrep "h" "$wordche2"
+        fi
+	if [ "$wordche3" != "e" ]; then
+                letterrep "e" "$wordche3"
+        fi
+
+	#NON is another very common word with 3 letters in Italian, 
+	#its difference is, it has the same letter at first and third position
+	wordnonlist=$(cat $decfilepath | grep -o '\b[a-z]\{3\}\b' | sort | uniq -c | sort -nr)
 	
-	#letterrep "q" "$wordque1"
-	#letterrep "u" "$wordque2"
-	#letterrep "e" "$wordque3"
-	
+	for wordnon in $wordnonlist; do
+		wordnon1=$(echo $wordnon | cut -c 1)
+		wordnon2=$(echo $wordnon | cut -c 2)
+		wordnon3=$(echo $wordnon | cut -c 3)
+
+		if [ "$wordnon1" == "$wordnon3" ];
+		then
+			if [ "n" != "$wordnon1" ];then
+				letterrep "n" "$wordnon1"
+			fi	
+			if [ "o" != "$wordnon2" ];then
+				letterrep "o" "$wordnon2"
+			fi
+			break
+		fi
+	done
+
+
 	#############################################################################################################   
         #Version 1.2
 	#Using common words like "uma" and "nao"
