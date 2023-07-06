@@ -31,16 +31,20 @@ The letter L is searched for in this version using another method, it can often 
 ## Additional Information 
 
 Links that helped me with decipher this: 
-One of the random texts used for frequency analysis: https://www.aranzulla.it/libri-pdf-gratis-62036.html#sub-chapter1
 
-Italian dictionary: https://www.treccani.it/vocabolario/
+--One of the random texts used for frequency analysis: https://www.aranzulla.it/libri-pdf-gratis-62036.html#sub-chapter1
 
-La divina commedia book: https://bibdig.biblioteca.unesp.br/items/dc249e33-db19-45ff-9dfc-6c0f1cb20001/full
+--Italian dictionary: https://www.treccani.it/vocabolario/
 
-letters frequency:
+--La divina commedia book: https://bibdig.biblioteca.unesp.br/items/dc249e33-db19-45ff-9dfc-6c0f1cb20001/full
+
+--letters frequency:
 https://en.wikipedia.org/wiki/Letter_frequency
+
 https://www.sttmedia.com/characterfrequency-italian
+
 https://www.sttmedia.com/syllablefrequency-italian
+
 https://www.reddit.com/r/dataisbeautiful/comments/ls83py/frequency_of_letters_in_italian_words_and_where/
 
 ## How to run the script
