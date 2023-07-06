@@ -29,7 +29,7 @@ fi
 #Function to count letters from the file
 function countletters(){
 	position=0 
-	for l in {A..Z};
+	for l in {a..z};
 	do	
 		filefr[$position]=$(grep -o "$l" "$1" | wc -l)
 		abc[$position]="$l"
