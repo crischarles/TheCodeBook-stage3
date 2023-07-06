@@ -98,6 +98,10 @@ function decfunction(){
 	decfilepath=/tmp/decfile.txt
 	cat "$1" | tr '[:lower:]' '[:upper:]' > $decfilepath
 
+        ############################################################################################################
+        #Version 1.0
+        #Deciphering through Letter Frequency analysis 
+	
 	areplacement
 
 	countletters $decfilepath
@@ -105,22 +109,8 @@ function decfunction(){
 	sposition=0
 	sortletters
 
-	echo "${abc[*]}"
-	echo "${filefr[*]}"
-
-	echo "  ${itfr[*]}"
-	echo "${sabc[*]}"
-	echo "${sfilefr[*]}"
-
-	############################################################################################################
-	#Version 1.0
-	#Deciphering through Letter Frequency analysis 
-
 	#Special treatment for most frequent letter 
 	sed -i "s/${sabc[0]}/ /g" $decfilepath
-
-	#areplacement $decfilepath
-	#sed -i '1,13 s/M/a/' $decfilepath
 
 	for i in {1..26};
 	do
@@ -171,6 +161,7 @@ function decfunction(){
 	############################################################################################################
 	#Version 1.2
 	#Searching for T letter through the word TUTTE
+	#TUTTE is a common 5 letters word, with the advantage of those 3 same letter in position 1, 3 and 4. 
 	
 	wordlist=$(cat $decfilepath | grep -o '\b[a-z]\{5\}\b' | sort | uniq -c | sort -nr)
 
@@ -183,7 +174,6 @@ function decfunction(){
 
 		if [[ $wordt1 == $wordt3 && $wordt3 == $wordt4 && $wordt5 == "e" ]];
 		then
-			echo "found the right word $wordt"
 			letterrep "t" "$wordt1"
 			letterrep "u" "$wordt2"
 		fi
@@ -191,31 +181,21 @@ function decfunction(){
 
         #############################################################################################################   
         #Version 1.3
-        #Putting A in the right place after checking the outcome manually
+        #Searching for L
+	#L is the most common letter found not between other letters (after A, E and I) 
+	
+	letterlist=$(cat $decfilepath | grep -o '\b[a-z]\b' | sort | uniq -c | sort -nr)
+	letterstorm=(a e i)
 
-        mustbea=(q b d u j g)
+	for i in {0..2};
+	do
+		letterlist=$(echo $letterlist | grep -o '\b[a-z]\b' | sed "/${letterstorm[$i]}/d")
+	done
 
-        for i in {0..5};
-        do
-                echo ${mustbea[$i]}
-                #tr "${mustbea[$i]}" "a" < $decfilepath > /tmp/decfiletmp.txt && mv /tmp/decfiletmp.txt $decfilepath
-        done
-
+	letterl=$(echo $letterlist | cut -c 1)
+	letterrep "l" "$letterl"
 
 }
-
-
-#countletters $1
-
-#sposition=0
-#sortletters
-
-#echo "${abc[*]}"
-#echo "${filefr[*]}"
-
-#echo "  ${itfr[*]}"
-#echo "${sabc[*]}"
-#echo "${sfilefr[*]}"
 
 decfunction $1
 echo "here is your deciphered message"
