@@ -32,7 +32,9 @@ The letter L is searched for in this version using another method, it can often 
 
 Links that helped me with decipher this: 
 One of the random texts used for frequency analysis: https://www.aranzulla.it/libri-pdf-gratis-62036.html#sub-chapter1
+
 Italian dictionary: https://www.treccani.it/vocabolario/
+
 La divina commedia book: https://bibdig.biblioteca.unesp.br/items/dc249e33-db19-45ff-9dfc-6c0f1cb20001/full
 
 letters frequency:
