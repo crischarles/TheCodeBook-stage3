@@ -31,7 +31,7 @@ else
 fi
 
 #Array with letters by frequency - Italian
-itfr=(e a i o n l r t s c d p u m v g z f b q h w y j k x)
+itfr=(e i o n l r t s c d p u m v g z f b q h w y j k x a)
 
 #Function to count letters from the file
 function countletters(){
@@ -72,6 +72,17 @@ function sortletters(){
 	fi
 }
 
+function areplacement() {
+
+	sed -i 's/G/a/g' $decfilepath
+	sed -i 's/M/a/g' $decfilepath
+	sed -i 's/C/a/g' $decfilepath
+	sed -i 's/Z/a/g' $decfilepath
+	sed -i 's/N/a/g' $decfilepath
+	sed -i 's/B/a/g' $decfilepath
+}
+
+
 #Function used for letter replacement 
 function letterrep(){
 
@@ -87,12 +98,29 @@ function decfunction(){
 	decfilepath=/tmp/decfile.txt
 	cat "$1" | tr '[:lower:]' '[:upper:]' > $decfilepath
 
+	areplacement
+
+	countletters $decfilepath
+
+	sposition=0
+	sortletters
+
+	echo "${abc[*]}"
+	echo "${filefr[*]}"
+
+	echo "  ${itfr[*]}"
+	echo "${sabc[*]}"
+	echo "${sfilefr[*]}"
+
 	############################################################################################################
 	#Version 1.0
 	#Deciphering through Letter Frequency analysis 
 
 	#Special treatment for most frequent letter 
 	sed -i "s/${sabc[0]}/ /g" $decfilepath
+
+	#areplacement $decfilepath
+	#sed -i '1,13 s/M/a/' $decfilepath
 
 	for i in {1..26};
 	do
@@ -140,58 +168,54 @@ function decfunction(){
 		fi
 	done
 
-
-	#############################################################################################################   
-        #Version 1.2
-	#Using common words like "uma" and "nao"
+	############################################################################################################
+	#Version 1.2
+	#Searching for T letter through the word TUTTE
 	
-	#Updating wordslist
-	wordslist=$(cat $decfilepath | grep -o '\b[a-z]\{3\}\b' | sort | uniq -c | sort -nr)
-	
-	#Searching for the word "uma"
-	worduma=$(echo $wordslist | grep -Eo '\bu\w+a\b' | head -n 1)
-	worduma=$(echo $worduma | cut -c 2)
+	wordlist=$(cat $decfilepath | grep -o '\b[a-z]\{5\}\b' | sort | uniq -c | sort -nr)
 
-	#Letter replacement time base on the word "uma"
-	#letterrep "m" "$worduma"
+	for wordt in $wordlist; do 
+		wordt1=$(echo $wordt | cut -c 1)
+		wordt2=$(echo $wordt | cut -c 2)
+		wordt3=$(echo $wordt | cut -c 3)
+		wordt4=$(echo $wordt | cut -c 4)
+		wordt5=$(echo $wordt | cut -c 5)
 
-	#Searching for the word "nao" and removing the possible word already fixed "mao"
-	wordslist=$(cat $decfilepath | grep -o '\b[a-z]\{3\}\b' | sort | uniq -c | sort -nr)
-	wordnao=$(echo $wordslist | grep -Eo '\b\w+ao\b' | sed '/mao/d' | head -n 1)
-	
-	wordnao=$(echo $wordnao | cut -c 1)
-
-        #letterrep "n" "$wordnao"
-
-	#############################################################################################################
-        #Version 1.3
-        #Where is "H"? Using the word "ha" to find it
-	
-	wordslist=$(cat $decfilepath | grep -o '\b[a-z]\{2\}\b' | sort | uniq -c | sort -nr)
-	
-	#Removing common words with 2 letters ending with "a"
-	endswitha=(da ja la na)
-	for i in {0..3};
-	do 
-		wordslist=$(echo $wordslist | grep -Eo '\b\w+a\b' | sed "/${endswitha[i]}/d")
+		if [[ $wordt1 == $wordt3 && $wordt3 == $wordt4 && $wordt5 == "e" ]];
+		then
+			echo "found the right word $wordt"
+			letterrep "t" "$wordt1"
+			letterrep "u" "$wordt2"
+		fi
 	done
 
-	wordha=$(echo $wordslist | cut -c 1)
-	#letterrep "h" "$wordha"
+        #############################################################################################################   
+        #Version 1.3
+        #Putting A in the right place after checking the outcome manually
+
+        mustbea=(q b d u j g)
+
+        for i in {0..5};
+        do
+                echo ${mustbea[$i]}
+                #tr "${mustbea[$i]}" "a" < $decfilepath > /tmp/decfiletmp.txt && mv /tmp/decfiletmp.txt $decfilepath
+        done
+
+
 }
 
 
-countletters $1
+#countletters $1
 
-sposition=0
-sortletters
+#sposition=0
+#sortletters
 
-echo "${abc[*]}"
-echo "${filefr[*]}"
+#echo "${abc[*]}"
+#echo "${filefr[*]}"
 
-echo "${itfr[*]}"
-echo "${sabc[*]}"
-echo "${sfilefr[*]}"
+#echo "  ${itfr[*]}"
+#echo "${sabc[*]}"
+#echo "${sfilefr[*]}"
 
 decfunction $1
 echo "here is your deciphered message"
